@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
+import { QRCodeSVG } from 'qrcode.react';
 import { Web3State, Invoice, InvoiceStatus } from '../types';
 import { getProvider, createInvoice, cancelInvoice, getMerchantInvoices, signInvoice } from '../services/web3Service';
 import { generateInvoiceDetails } from '../services/geminiService';
@@ -19,6 +20,7 @@ const MerchantDashboard: React.FC<DashboardProps> = ({ web3, registryAddress }) 
     const [cancellingId, setCancellingId] = useState<string | null>(null);
     const [recentInvoices, setRecentInvoices] = useState<Invoice[]>([]);
     const [gaslessLink, setGaslessLink] = useState<string>('');
+    const [showQR, setShowQR] = useState(false);
 
     // Helper: Refresh List
     const refreshInvoices = useCallback(async () => {
@@ -256,6 +258,7 @@ const MerchantDashboard: React.FC<DashboardProps> = ({ web3, registryAddress }) 
                                     className="flex-1 bg-dark-900 border border-green-600 rounded px-3 py-2 text-white text-xs font-mono"
                                 />
                                 <button
+                                    type="button"
                                     onClick={() => {
                                         navigator.clipboard.writeText(gaslessLink);
                                         alert('Copied to clipboard!');
@@ -264,8 +267,47 @@ const MerchantDashboard: React.FC<DashboardProps> = ({ web3, registryAddress }) 
                                 >
                                     Copy
                                 </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowQR(true)}
+                                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded transition"
+                                >
+                                    Show QR
+                                </button>
                             </div>
                             <div className="text-xs text-gray-400 mt-2">Share this link with the payer. No gas fee required!</div>
+                        </div>
+                    )}
+
+                    {/* QR Code Modal */}
+                    {showQR && gaslessLink && (
+                        <div
+                            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+                            onClick={() => setShowQR(false)}
+                        >
+                            <div
+                                className="bg-dark-800 border border-stable-500 rounded-xl p-6 max-w-sm"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <h3 className="text-xl font-bold text-white mb-4 text-center">Scan to Pay</h3>
+                                <div className="bg-white p-4 rounded-lg">
+                                    <QRCodeSVG
+                                        value={gaslessLink}
+                                        size={256}
+                                        level="H"
+                                        includeMargin={true}
+                                    />
+                                </div>
+                                <p className="text-xs text-gray-400 mt-4 text-center">
+                                    Customer can scan this QR code to pay the invoice
+                                </p>
+                                <button
+                                    onClick={() => setShowQR(false)}
+                                    className="w-full mt-4 px-4 py-2 bg-stable-500 hover:bg-stable-400 text-black rounded-lg font-medium transition"
+                                >
+                                    Close
+                                </button>
+                            </div>
                         </div>
                     )}
                 </form>
