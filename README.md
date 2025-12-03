@@ -2,11 +2,13 @@
 
 > Decentralized Merchant Checkout on Stable Testnet
 
+**Official Website:** https://stable-pay.netlify.app/
+
 StablePay is a decentralized invoice and payment system built on the **Stable Testnet**, featuring both traditional on-chain invoices and innovative **gasless invoices** using EIP-712 signatures.
 
-## ✨ Features
+## Features
 
-### 🧾 Dual Invoice System
+### Dual Invoice System
 
 **On-Chain Invoice**
 - Traditional blockchain-based invoices
@@ -22,15 +24,16 @@ StablePay is a decentralized invoice and payment system built on the **Stable Te
 - Invoice data embedded in shareable link
 - Privacy-focused: visible only to link holders
 
-### 💰 Payment Features
+### Payment Features
 
 - **gUSDT Payments**: Native integration with Stable's Bank precompile
 - **Smart Approval**: One-time gUSDT approval for seamless payments
 - **Payment Links**: Share invoice links for easy payment collection
 - **Invoice History**: Track all created invoices in dashboard
 - **Expiry Management**: Set custom expiration times for invoices
+- **QR Code Generation**: Display payment QR codes for mobile scanning
 
-### 🎨 User Interface
+### User Interface
 
 - Clean, modern dashboard for merchants
 - Simplified payment page for payers
@@ -38,7 +41,7 @@ StablePay is a decentralized invoice and payment system built on the **Stable Te
 - Mobile-responsive design
 - No setup required (pre-configured contract)
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: React 19 + TypeScript + Vite
 - **Blockchain**: Stable Testnet (Chain ID: 2201)
@@ -46,10 +49,15 @@ StablePay is a decentralized invoice and payment system built on the **Stable Te
 - **Web3**: ethers.js v6
 - **Styling**: TailwindCSS
 - **Build Tools**: Hardhat (compilation), Vite (bundling)
+- **Deployment**: Netlify
 
-## 📦 Installation
+## Installation
 
 ```bash
+# Clone repository
+git clone https://github.com/hstptcn5/stablepay.git
+cd stablepay
+
 # Install dependencies
 npm install
 
@@ -59,26 +67,41 @@ npm run dev
 
 The app will run at `http://localhost:3002`
 
-## 🚀 Usage
+## Usage
+
+**Live App:** https://stable-pay.netlify.app/
 
 ### For Merchants
 
-1. **Connect Wallet** (MetaMask or compatible wallet)
-2. **Create Invoice**:
-   - **On-Chain**: Click "Create On-Chain Invoice" → Pay gas → Get invoice ID
-   - **Gasless**: Click "Create Gasless Link (Free)" → Sign message → Get shareable link
-3. **Share Payment Link** with your customer
+1. Visit https://stable-pay.netlify.app/
+2. Click "Connect Wallet" (MetaMask or compatible Web3 wallet)
+3. Create an invoice using one of two methods:
+
+   **Option A: On-Chain Invoice**
+   - Fill in description, amount, and optional payer address
+   - Click "Create On-Chain Invoice"
+   - Confirm transaction in wallet (pays gas)
+   - Copy the payment link and share with customer
+
+   **Option B: Gasless Invoice**
+   - Fill in description, amount, and optional payer address
+   - Click "Create Gasless Link (Free)"
+   - Sign the message in wallet (no gas required)
+   - Copy link or show QR code to customer
+
+4. Monitor invoice status in the History panel
 
 ### For Payers
 
 1. Open the payment link received from merchant
-2. **Connect Wallet**
-3. Review invoice details
-4. Click **"Pay Now"**
-5. Approve gUSDT spending (first time only)
+2. Click "Connect Wallet"
+3. Review invoice details (amount, description, expiry)
+4. Click "Pay Now"
+5. Approve gUSDT spending if first time
 6. Confirm payment transaction
+7. Payment complete!
 
-## 📝 Smart Contract
+## Smart Contract
 
 **Deployed Address**: `0x5b9b95afbc73f85e680cb4bc847db72a2f249105`
 
@@ -91,7 +114,9 @@ The app will run at `http://localhost:3002`
 
 **Source**: `contracts/InvoiceRegistry.sol`
 
-## 🔧 Configuration
+**Explorer**: https://testnet.stable.xyz/address/0x5b9b95afbc73f85e680cb4bc847db72a2f249105
+
+## Configuration
 
 The contract address is pre-configured in `constants.ts`:
 
@@ -109,7 +134,7 @@ npm run compile
 npm run deploy
 ```
 
-## 🌐 Network Details
+## Network Details
 
 - **Network**: Stable Testnet
 - **Chain ID**: 2201
@@ -117,7 +142,7 @@ npm run deploy
 - **Explorer**: https://testnet.stable.xyz
 - **Native Token**: gUSDT (Bank precompile at `0x0000...1000`)
 
-## 📚 How It Works
+## How It Works
 
 ### On-Chain Invoice Flow
 
@@ -151,7 +176,7 @@ Merchant                    Browser                   Payer
    |<--- Receive gUSDT ---------|              |          |
 ```
 
-## 🔐 Security
+## Security
 
 - **EIP-712 Signatures**: Structured data signing for gasless invoices
 - **Nonce Management**: Replay attack prevention
@@ -159,14 +184,14 @@ Merchant                    Browser                   Payer
 - **Payer Verification**: Optional payer address restriction
 - **Expiry Checks**: Time-based invoice validation
 
-## 📄 License
+## License
 
 MIT
 
-## 🤝 Contributing
+## Contributing
 
 Contributions welcome! This is a demonstration project for the Stable Testnet ecosystem.
 
 ---
 
-Built with ❤️ for the Stable Testnet
+Built for the Stable Testnet
