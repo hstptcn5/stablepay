@@ -1,0 +1,5 @@
+{
+  "name": "StablePay",
+  "description": "A decentralized merchant checkout and invoicing system on Stable Testnet using gUSDT and Bank Precompiles.",
+  "requestFramePermissions": []
+}
