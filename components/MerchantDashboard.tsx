@@ -3,7 +3,6 @@ import { ethers } from 'ethers';
 import { QRCodeSVG } from 'qrcode.react';
 import { Web3State, Invoice, InvoiceStatus } from '../types';
 import { getProvider, createInvoice, cancelInvoice, getMerchantInvoices, signInvoice } from '../services/web3Service';
-import { generateInvoiceDetails } from '../services/geminiService';
 import { Link } from 'react-router-dom';
 
 interface DashboardProps {
@@ -16,7 +15,6 @@ const MerchantDashboard: React.FC<DashboardProps> = ({ web3, registryAddress }) 
     const [description, setDescription] = useState('');
     const [payer, setPayer] = useState('');
     const [loading, setLoading] = useState(false);
-    const [aiLoading, setAiLoading] = useState(false);
     const [cancellingId, setCancellingId] = useState<string | null>(null);
     const [recentInvoices, setRecentInvoices] = useState<Invoice[]>([]);
     const [gaslessLink, setGaslessLink] = useState<string>('');
@@ -39,20 +37,6 @@ const MerchantDashboard: React.FC<DashboardProps> = ({ web3, registryAddress }) 
         const interval = setInterval(refreshInvoices, 5000); // Poll every 5s
         return () => clearInterval(interval);
     }, [refreshInvoices]);
-
-    const handleAiDraft = async () => {
-        if (!description) return;
-        setAiLoading(true);
-        try {
-            const result = await generateInvoiceDetails(description);
-            setDescription(result.description);
-            if (parseFloat(result.suggestedAmount) > 0) {
-                setAmount(result.suggestedAmount);
-            }
-        } finally {
-            setAiLoading(false);
-        }
-    };
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -182,23 +166,13 @@ const MerchantDashboard: React.FC<DashboardProps> = ({ web3, registryAddress }) 
                 <form onSubmit={handleCreate} className="space-y-5">
                     <div>
                         <label className="block text-sm font-medium text-gray-400 mb-1">Description</label>
-                        <div className="flex gap-2">
-                            <input
-                                type="text"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder="e.g. 2x Consulting Hours"
-                                className="flex-1 bg-dark-900 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-stable-500 focus:outline-none"
-                            />
-                            <button
-                                type="button"
-                                onClick={handleAiDraft}
-                                disabled={aiLoading || !description}
-                                className="px-3 py-2 bg-purple-600/20 text-purple-400 border border-purple-600/50 rounded-lg hover:bg-purple-600/30 transition text-sm"
-                            >
-                                {aiLoading ? "Thinking..." : "✨ AI Draft"}
-                            </button>
-                        </div>
+                        <input
+                            type="text"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="e.g. 2x Consulting Hours"
+                            className="bg-dark-900 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-stable-500 focus:outline-none"
+                        />
                         <p className="text-xs text-gray-500 mt-1">Description is stored on-chain (in events). No database required.</p>
                     </div>
 
